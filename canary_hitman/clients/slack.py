@@ -1,4 +1,5 @@
 import requests
+from CaseInsensitiveDict import CaseInsensitiveDict
 
 
 class SlackClient:
@@ -6,7 +7,7 @@ class SlackClient:
         self.slack_token = slack_token
 
         self.session = requests.sessions.Session()
-        self.session.headers = {"Authorization": f"Bearer {slack_token}"}
+        self.session.headers = CaseInsensitiveDict(dictionary={"Authorization": f"Bearer {slack_token}"})
 
     def send_message(self, channel: str, message: str) -> None:
         self.session.post(
@@ -18,7 +19,7 @@ class SlackClient:
                 "username": "Canary hitman",
                 "mrkdwn": True,
                 "icon_emoji": ":bird:",
-                "text": message
+                "text": message,
             },
         )
 

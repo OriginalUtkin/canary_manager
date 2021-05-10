@@ -1,6 +1,7 @@
-from canary_hitman.models.gitlab import Release, Commit
-from typing import Optional
 from dataclasses import dataclass
+from typing import Optional
+
+from canary_hitman.models.gitlab import Commit, Release
 
 
 @dataclass
