@@ -13,7 +13,7 @@ class SlackClient:
         self.session.post(
             "https://slack.com/api/chat.postMessage",
             json={
-                "channel": channel,
+                "channel": f"#{channel}",
                 "unfurl_links": False,
                 "unfurl_media": False,
                 "username": "Canary hitman",
