@@ -1,6 +1,4 @@
 #!/usr/bin/python
-import os
-
 from canary_hitman.utils import get_environ_var
 
 from .hitman import Hitman, Result

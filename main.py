@@ -1,6 +1,4 @@
 #!/usr/bin/python
-import os
-
 from canary_hitman.executable.hitman.hitman import Hitman, Result
 from canary_hitman.executable.notifier.notifier import Notifier
 from canary_hitman.utils import get_environ_var

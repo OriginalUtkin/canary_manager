@@ -1,7 +1,7 @@
 import re
 import subprocess
 from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional
+from typing import Dict, List, Optional
 
 from dateutil.parser import parse
 
