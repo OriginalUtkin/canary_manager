@@ -13,7 +13,13 @@ from .models.result import Result
 
 class Hitman:
     def __init__(
-        self, k8s_namespace: str, canary_names: str, ttl: int, commit_to_release_sha: str, project_id: int
+        self,
+        k8s_namespace: str,
+        canary_names: str,
+        ttl: int,
+        commit_to_release_sha: str,
+        project_id: int,
+        gitlab_token: str,
     ) -> None:
         self.k8s_namespace: str = k8s_namespace
         self.canary_names: List[str] = Hitman.get_pods_to_search(canary_names)
@@ -21,18 +27,18 @@ class Hitman:
         self.commit_to_release_sha: str = commit_to_release_sha
         self.project_id: int = project_id
 
-        self.gitlab_client = GitlabClient()
+        self.gitlab_client = GitlabClient(token=gitlab_token)
 
     def hunt(self) -> Result:
         get_pods_output: str = self._run_shell_command(command=f"get pods | grep -E '{'|'.join(self.canary_names)}'")
-        canary_pods: List[str] = get_pods_output.strip().split("\n")
 
-        if not canary_pods:
+        if not get_pods_output:
             print(f"Canary pods don't exist for namespace {self.k8s_namespace} and deployments {self.canary_names}")
             deployed_canary_release: Optional[Release] = None
 
         else:
             # TODO: If release is not exist but pods are found -> deployed commit was squashed/branch was deleted --> HOW to handle?
+            canary_pods: List[str] = get_pods_output.strip().split("\n")
             deployed_canary_release = self._build_release(pods=canary_pods)
 
         current_commit = self._get_commit(repository_id=self.project_id, commit_sha=self.commit_to_release_sha)

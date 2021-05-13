@@ -1,14 +1,9 @@
-import requests
-from CaseInsensitiveDict import CaseInsensitiveDict
+from canary_hitman.clients.base import BaseClient
+
+from .exceptions import ErrorCodeException, LookupByEmailException
 
 
-class SlackClient:
-    def __init__(self, slack_token: str) -> None:
-        self.slack_token = slack_token
-
-        self.session = requests.sessions.Session()
-        self.session.headers = CaseInsensitiveDict(dictionary={"Authorization": f"Bearer {slack_token}"})
-
+class SlackClient(BaseClient):
     def send_message(self, channel: str, message: str) -> None:
         self.session.post(
             "https://slack.com/api/chat.postMessage",
@@ -25,5 +20,13 @@ class SlackClient:
 
     def get_user(self, email: str) -> str:
         response = self.session.post("https://slack.com/api/users.lookupByEmail", data={"email": email})
+
+        r_json = response.json()
+
+        if not r_json["ok"]:
+            raise ErrorCodeException
+
+        if not r_json["user"].get("name"):
+            raise LookupByEmailException
 
         return response.json()["user"]["name"]

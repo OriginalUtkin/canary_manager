@@ -10,6 +10,7 @@ if __name__ == "__main__":
         k8s_namespace=get_environ_var("NAMESPACE"),
         commit_to_release_sha=get_environ_var("COMMIT_SHA"),
         project_id=int(get_environ_var("PROJECT_ID")),
+        gitlab_token=get_environ_var("GITLAB_API_TOKEN"),
     )
 
     hunt_result: Result = hitman.hunt()
