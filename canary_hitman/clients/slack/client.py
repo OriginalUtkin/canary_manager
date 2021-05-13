@@ -24,9 +24,9 @@ class SlackClient(BaseClient):
         r_json = response.json()
 
         if not r_json["ok"]:
-            raise ErrorCodeException
+            raise ErrorCodeException(reason=r_json["error"])
 
         if not r_json["user"].get("name"):
-            raise LookupByEmailException
+            raise LookupByEmailException(email=email)
 
         return response.json()["user"]["name"]

@@ -17,13 +17,15 @@ def get_environ_var(variable_name: str) -> str:
 
 
 @contextmanager
-def handle_exception(custom_exception: Type[HitmanException]) -> Generator:
+def terminate_if_exception(exception_type: Type[HitmanException]) -> Generator:
     try:
         yield
 
-    except custom_exception as e:
+    except exception_type as e:
         print(crayons.red(e.text))
         exit(1)
 
     except Exception:
         print(crayons.red("UnexpectedError"))
+
+        raise
