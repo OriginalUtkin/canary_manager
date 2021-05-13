@@ -5,11 +5,11 @@ from canary_hitman.executable.notifier.notifier import Notifier
 from canary_hitman.utils import (
     MissingVariableException,
     get_environ_var,
-    handle_exception,
+    terminate_if_exception,
 )
 
 if __name__ == "__main__":
-    with handle_exception(MissingVariableException):
+    with terminate_if_exception(exception_type=MissingVariableException):
         canary_names: str = get_environ_var("PODS")
         ttl: int = int(get_environ_var("CANARY_TTL"))
         k8s_namespace: str = get_environ_var("K8S_NAMESPACE")
@@ -33,26 +33,26 @@ if __name__ == "__main__":
 
     hunt_result: Result = hitman.hunt()
 
-    with handle_exception(custom_exception=SlackAPIError):
-        notifier = Notifier(channel_to_notify=channel_to_notify, slack_token=slack_token,)
+    notifier = Notifier(channel_to_notify=channel_to_notify, slack_token=slack_token,)
 
-    if not hunt_result.deployed_canary_release:
-        notifier.notify_new_release(
-            canary_releaser_email=hunt_result.current_commit.committer.email,
-            new_canary_commit_link=hunt_result.current_commit.web_link,
-            project_name=repository_name,
-        )
+    with terminate_if_exception(exception_type=SlackAPIError):
+        if not hunt_result.deployed_canary_release:
+            notifier.notify_new_release(
+                canary_releaser_email=hunt_result.current_commit.committer.email,
+                new_canary_commit_link=hunt_result.current_commit.web_link,
+                project_name=repository_name,
+            )
 
-        exit(0)
+            exit(0)
 
-    if hunt_result.is_deployable:
-        notifier.notify_override(
-            canary_releaser_email=hunt_result.current_commit.committer.email,
-            previous_canary_releaser_email=hunt_result.deployed_canary_release.commit.committer.email,
-            new_canary_commit_link=hunt_result.current_commit.web_link,
-            project_name=repository_name,
-        )
+        if hunt_result.is_deployable:
+            notifier.notify_override(
+                canary_releaser_email=hunt_result.current_commit.committer.email,
+                previous_canary_releaser_email=hunt_result.deployed_canary_release.commit.committer.email,
+                new_canary_commit_link=hunt_result.current_commit.web_link,
+                project_name=repository_name,
+            )
 
-        exit(0)
+            exit(0)
 
     exit(1)
