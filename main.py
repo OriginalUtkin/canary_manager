@@ -9,13 +9,14 @@ if __name__ == "__main__":
     ttl: int = int(get_environ_var("CANARY_TTL"))
     k8s_namespace: str = get_environ_var("K8S_NAMESPACE")
     commit_to_release_sha: str = get_environ_var("COMMIT_SHA")
+    project_id: str = get_environ_var("PROJECT_ID")
 
     hitman = Hitman(
         canary_names=canary_names,
         ttl=int(ttl),
-        k8s_namespace=get_environ_var("K8S_NAMESPACE"),
-        repository_name=repository_name,
-        commit_to_release_sha=get_environ_var("COMMIT_SHA"),
+        k8s_namespace=k8s_namespace,
+        commit_to_release_sha=commit_to_release_sha,
+        project_id=int(project_id),
     )
 
     hunt_result: Result = hitman.hunt()

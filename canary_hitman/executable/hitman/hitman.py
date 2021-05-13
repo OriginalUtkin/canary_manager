@@ -13,13 +13,13 @@ from .models.result import Result
 
 class Hitman:
     def __init__(
-        self, k8s_namespace: str, canary_names: str, ttl: int, repository_name: str, commit_to_release_sha: str,
+        self, k8s_namespace: str, canary_names: str, ttl: int, commit_to_release_sha: str, project_id: int
     ) -> None:
         self.k8s_namespace: str = k8s_namespace
         self.canary_names: List[str] = Hitman.get_pods_to_search(canary_names)
         self.canary_ttl: int = ttl
-        self.repository_name: str = repository_name
         self.commit_to_release_sha: str = commit_to_release_sha
+        self.project_id: int = project_id
 
         self.gitlab_client = GitlabClient()
 
@@ -35,7 +35,7 @@ class Hitman:
             # TODO: If release is not exist but pods are found -> deployed commit was squashed/branch was deleted --> HOW to handle?
             deployed_canary_release = self._build_release(pods=canary_pods)
 
-        current_commit = self._get_commit(repository_id="333", commit_sha=self.commit_to_release_sha)
+        current_commit = self._get_commit(repository_id=self.project_id, commit_sha=self.commit_to_release_sha)
 
         if not current_commit:
             raise Exception()
@@ -48,11 +48,6 @@ class Hitman:
         )
 
     def _build_release(self, pods: List) -> Release:
-        # TODO: Move it to hunt method
-        repositories: Dict = self.gitlab_client.request_api(path="/projects", params={"search": self.repository_name})
-        # TODO: get repository id using gitlab API
-        repository_id = "333"
-
         releases: List[Release] = list()
 
         for pod in pods:
@@ -64,7 +59,7 @@ class Hitman:
                 re.findall(r"Start\sTime:\s+[a-zA-Z]{3},\s([a-zA-Z0-9,\s:+]+)\n", described_pod)[0]
             ).replace(tzinfo=None)
 
-            commit: Optional[Commit] = self._get_commit(repository_id=repository_id, commit_sha=commit_sha)
+            commit: Optional[Commit] = self._get_commit(repository_id=self.project_id, commit_sha=commit_sha)
 
             if not commit:
                 # Commit that was deployed to canary was squashed or reverted/branch was deleted
@@ -77,7 +72,7 @@ class Hitman:
 
         return releases[0]
 
-    def _get_commit(self, repository_id: str, commit_sha: str) -> Optional[Commit]:
+    def _get_commit(self, repository_id: int, commit_sha: str) -> Optional[Commit]:
         api_commit: Dict = self.gitlab_client.request_api(
             path=f"/projects/{repository_id}/repository/commits/{commit_sha}"
         )
@@ -95,9 +90,12 @@ class Hitman:
         return datetime.now() - deployed_at >= timedelta(hours=self.canary_ttl)
 
     def _run_shell_command(self, command: str) -> str:
-        return subprocess.check_output(["/bin/bash", "-c", f"kubectl -n {self.k8s_namespace} {command}"]).decode(
-            "utf-8"
-        )
+        try:
+            return subprocess.check_output(f"kubectl -n {self.k8s_namespace} {command}", shell=True).decode("utf-8")
+        except subprocess.CalledProcessError as e:
+            if not e.output:
+                return ""
+            raise RuntimeError(f"command return with error (code {e.returncode}): {e.output}")
 
     @staticmethod
     def get_pods_to_search(canary_names: str) -> List[str]:

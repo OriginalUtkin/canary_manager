@@ -8,8 +8,8 @@ if __name__ == "__main__":
         canary_names=get_environ_var("CANARY_POSTFIX"),
         ttl=int(get_environ_var("CANARY_TTL")),
         k8s_namespace=get_environ_var("NAMESPACE"),
-        repository_name=get_environ_var("REPOSITORY_NAME"),
         commit_to_release_sha=get_environ_var("COMMIT_SHA"),
+        project_id=int(get_environ_var("PROJECT_ID")),
     )
 
     hunt_result: Result = hitman.hunt()
