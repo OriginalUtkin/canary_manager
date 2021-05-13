@@ -1,2 +1,2 @@
 from .gitlab import GitlabClient
-from .slack import SlackClient
+from .slack.client import SlackClient

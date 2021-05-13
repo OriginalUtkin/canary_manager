@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from canary_hitman.clients.slack import SlackClient
+from canary_hitman.clients.slack.client import SlackClient
 
 
 class Notifier:
@@ -8,7 +8,7 @@ class Notifier:
         self.channel_to_notify = channel_to_notify
         self.slack_token = slack_token
 
-        self.slack_client = SlackClient(slack_token=self.slack_token)
+        self.slack_client = SlackClient(token=self.slack_token)
 
     def notify_failure(self) -> None:
         pass
