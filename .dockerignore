@@ -1,4 +1,4 @@
 *
 !canary_hitman
-!requirements
+!requirements/requirements.txt
 !main.py
