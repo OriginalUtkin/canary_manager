@@ -8,5 +8,3 @@ from canary_hitman.models.gitlab import Commit, Release
 class Result:
     deployed_canary_release: Optional[Release]
     current_commit: Commit
-
-    is_deployable: bool

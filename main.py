@@ -1,6 +1,8 @@
 #!/usr/bin/python
+from datetime import datetime, timedelta
+
 from canary_hitman.clients.slack.exceptions import SlackAPIError
-from canary_hitman.executable.hitman.hitman import Hitman, Result
+from canary_hitman.executable.hitman.kubectl.executor import Executor, Result
 from canary_hitman.executable.notifier.notifier import Notifier
 from canary_hitman.utils import (
     MissingVariableException,
@@ -22,9 +24,8 @@ if __name__ == "__main__":
 
         repository_name: str = get_environ_var("REPOSITORY_NAME")
 
-    hitman = Hitman(
+    hitman = Executor(
         canary_names=canary_names,
-        ttl=int(ttl),
         k8s_namespace=k8s_namespace,
         commit_to_release_sha=commit_to_release_sha,
         project_id=int(project_id),
@@ -45,10 +46,12 @@ if __name__ == "__main__":
 
             exit(0)
 
-        if hunt_result.is_deployable:
+        if datetime.now() - hunt_result.deployed_canary_release.deployed_at >= timedelta(hours=ttl):
             notifier.notify_override(
                 canary_releaser_email=hunt_result.current_commit.committer.email,
-                previous_canary_releaser_email=hunt_result.deployed_canary_release.commit.committer.email,
+                previous_canary_releaser_email=hunt_result.deployed_canary_release.commit.committer.email
+                if hunt_result.deployed_canary_release.commit
+                else None,
                 new_canary_commit_link=hunt_result.current_commit.web_link,
                 project_name=repository_name,
             )
