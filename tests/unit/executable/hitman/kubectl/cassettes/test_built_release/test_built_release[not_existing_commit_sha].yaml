@@ -1,0 +1,40 @@
+interactions:
+- request:
+    body: null
+    headers:
+      authorization:
+      - Bearer Token Value
+    method: GET
+    uri: https://gitlab.skypicker.com/api/v4/projects/0/repository/commits/dummy_commit_sha
+  response:
+    body:
+      string: '{"message":"404 Commit Not Found"}'
+    headers:
+      Cache-Control:
+      - no-cache
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '34'
+      Content-Type:
+      - application/json
+      Date:
+      - Sat, 15 May 2021 12:18:22 GMT
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Vary:
+      - Origin
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Gitlab-Feature-Category:
+      - source_code_management
+      X-Request-Id:
+      - 01F5QZD5NY78Y424ESFEKFX3ZM
+      X-Runtime:
+      - '0.050008'
+    status:
+      code: 404
+      message: Not Found
+version: 1
