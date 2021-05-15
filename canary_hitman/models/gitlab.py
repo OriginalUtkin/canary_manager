@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Optional
 
 
 @dataclass
 class CommitterInfo:
-    name: str
     email: str
 
 
@@ -18,4 +18,4 @@ class Commit:
 @dataclass
 class Release:
     deployed_at: datetime
-    commit: Commit
+    commit: Optional[Commit]
