@@ -64,7 +64,7 @@ class Executor(AbstractHitman):
         return canary_metas[0]
 
     def _create_canary_meta(self, described_pod: str) -> CanaryMeta:
-        commit_sha: str = re.findall(r"Image:\s+[a-z0-9.\/-]+:([a-zA-Z0-9]+)", described_pod)[0]
+        commit_sha: str = re.findall(r"Image:\s+[a-z0-9.\/-_]+:([a-zA-Z0-9]+)", described_pod)[0]
         deploy_date: datetime = parse(
             re.findall(r"Start\sTime:\s+[a-zA-Z]{3},\s([a-zA-Z0-9,\s:+]+)\n", described_pod)[0]
         ).replace(tzinfo=None)

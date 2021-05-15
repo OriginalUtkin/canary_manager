@@ -1,0 +1,43 @@
+interactions:
+- request:
+    body: null
+    headers:
+      authorization:
+      - Bearer Token Value
+    method: GET
+    uri: https://gitlab.skypicker.com/api/v4/projects/333/repository/commits/c8f76d8f4e1b361ddcaf6086f70d9bb5e44487ab
+  response:
+    body:
+      string: '{"id":"c8f76d8f4e1b361ddcaf6086f70d9bb5e44487ab","short_id":"c8f76d8f","created_at":"2021-05-14T12:29:34.000+02:00","parent_ids":["05df4b96db7da115edd3ddebc4920f26facab4d3"],"title":"Commit_name","message":"Commit message","author_name":"name.surname","author_email":"email@email.com","authored_date":"2021-05-14T11:28:38.000+02:00","committer_name":"name.surname","committer_email":"email@email.com","committed_date":"2021-05-14T12:29:34.000+02:00","web_url":"https://gitlab.com/path","stats":{"additions":22,"deletions":9,"total":31},"status":"success","project_id":333,"last_pipeline":{"id":1385757,"project_id":333,"sha":"c8f76d8f4e1b361ddcaf6086f70d9bb5e44487ab","ref":"name/reference_name","status":"success","created_at":"2021-05-14T12:28:53.616+02:00","updated_at":"2021-05-14T12:50:19.871+02:00","web_url":"https://gitlab.com/pipeline_ref"}}'
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '1063'
+      Content-Type:
+      - application/json
+      Date:
+      - Sat, 15 May 2021 11:32:58 GMT
+      Etag:
+      - W/"c883183c4164153c0f0cb3330c5155bd"
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Vary:
+      - Accept-Encoding
+      - Origin
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Gitlab-Feature-Category:
+      - source_code_management
+      X-Request-Id:
+      - 01F5QWT29JRYM5E86QS5CGTTGF
+      X-Runtime:
+      - '0.099866'
+    status:
+      code: 200
+      message: OK
+version: 1
