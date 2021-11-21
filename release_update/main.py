@@ -12,6 +12,7 @@ def get_build_job_id(jobs: List[Dict], branch_ref: str) -> int:
 
 if __name__ == "__main__":
     token = os.environ["GITLAB_API_TOKEN"]
+    gitlab_base_path = os.environ["GITLAB_PATH"]
     filename_to_update = os.environ["FILENAME_TO_UPDATE"]
     build_branch_reference = os.environ["BUILD_BRANCH_REFERENCE"]
     target_branch_reference = os.environ["TARGET_BRANCH_REFERENCE"]
@@ -19,7 +20,7 @@ if __name__ == "__main__":
     project_id_merge_request = int(os.environ["PROJECT_ID_TO_UPDATE"])
     project_id_build = int(os.environ["PROJECT_ID_TO_BUILD"])
 
-    cli = GitlabClient(token)
+    cli = GitlabClient(gitlab_base_path, token)
 
     jobs = cli.request_api_get(path=f"/projects/{project_id_build}/jobs")
     recent_job_id = get_build_job_id(jobs, build_branch_reference)
