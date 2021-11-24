@@ -3,3 +3,4 @@
 !requirements/requirements.txt
 !main.py
 !release_update
+!release_update_main.py
