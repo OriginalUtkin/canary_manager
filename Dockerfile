@@ -2,10 +2,11 @@ ARG BASE_IMAGE
 
 FROM ${BASE_IMAGE}
 
-COPY . /canary_manager
-WORKDIR /canary_manager
+COPY . /tools
+WORKDIR /tools
 
 RUN pip install --ignore-installed -r requirements/requirements.txt
-RUN chmod +x main.py
 
-CMD ["./main.py"]
+RUN chmod +x main.py
+RUN chmod +x release_update/main.py
+
