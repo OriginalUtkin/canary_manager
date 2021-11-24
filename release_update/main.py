@@ -1,3 +1,4 @@
+#!/usr/bin/python
 from canary_hitman.clients.gitlab import GitlabClient
 import os
 import re
