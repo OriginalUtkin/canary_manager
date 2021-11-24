@@ -7,7 +7,7 @@ from typing import List, Dict
 
 def get_build_job_id(jobs: List[Dict], branch_ref: str) -> int:
     for job in jobs:
-        if job["ref"] == branch_ref:
+        if job["ref"] == branch_ref and job["name"] == "build":
             return job["id"]
 
 
